@@ -1,0 +1,10 @@
+{
+  "name": "ponytail",
+  "version": "0.1.0",
+  "description": "Lazy senior dev mode for AI agents. The best code is the code you never wrote.",
+  "keywords": ["yagni", "minimalism", "code-review", "productivity", "mimocode"],
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test tests/*.test.js"
+  }
+}
