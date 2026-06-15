@@ -11,11 +11,7 @@
   <em>He says nothing. He writes one line. It works.</em>
 </p>
 
-<p align="center">
-  <img src="https://img.shields.io/github/stars/DietrichGebert/ponytail?style=flat-square&color=111111&label=stars" alt="Stars">
-  <img src="https://img.shields.io/github/v/release/DietrichGebert/ponytail?style=flat-square&color=111111&label=release" alt="Release">
-  <img src="https://img.shields.io/badge/license-MIT-111111?style=flat-square" alt="MIT license">
-</p>
+
 
 <p align="center">
   <strong>80-94% less code &middot; 3-6&times; faster &middot; 47-77% cheaper</strong><br>
