@@ -4,155 +4,356 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ponytail — Lazy Senior Dev Mode for AI Agents</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0d1117;
-      --surface: #161b22;
-      --border: #30363d;
-      --text: #e6edf3;
-      --muted: #8b949e;
-      --accent: #58a6ff;
-      --green: #3fb950;
-      --red: #f85149;
-      --code-bg: #0d1117;
+      --bg-primary: #faf6f0;
+      --bg-surface: #ffffff;
+      --bg-inner: #f6efe5;
+      --bg-active: #f3ebe0;
+      --cream: #faf6f0;
+      --cream2: #f4ede2;
+      --cream3: #ecdfd0;
+      --ink: #1e1a15;
+      --ink2: #4a4038;
+      --ink3: #8c7e6e;
+      --text-main: #2c2a27;
+      --text-muted: #7a7266;
+      --text-inverse: #ffffff;
+      --accent: #b07d4a;
+      --accent-soft: #f0e4d0;
+      --accent-cocoa: #8e7c68;
+      --accent-cocoa-light: #f2ece4;
+      --accent-gold: #c5a880;
+      --warm: #c9a87c;
+      --warm2: #e8d5b7;
+      --status-completed-bg: #eaf2ec;
+      --status-completed-text: #4e7e5c;
+      --status-ongoing-bg: #faf0e6;
+      --status-ongoing-text: #c07f4e;
+      --radius: 16px;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --font-primary: 'Outfit', 'Segoe UI', system-ui, sans-serif;
+      --font-sans: 'Sora', 'Segoe UI Variable', system-ui, sans-serif;
+      --font-serif: 'Lora', Georgia, 'Times New Roman', serif;
+      --font-code: 'Consolas', 'Courier New', Courier, monospace;
+      --transition-fast: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-normal: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      --transition-elastic: all 0.25s cubic-bezier(.22,.68,0,1.1);
+      --shadow-sm: 0 2px 8px rgba(142, 124, 104, 0.04);
+      --shadow: 0 4px 20px rgba(160, 120, 70, 0.08);
+      --shadow-md: 0 10px 24px rgba(142, 124, 104, 0.06);
+      --shadow-lg: 0 20px 40px rgba(142, 124, 104, 0.1);
+      --shadow-hover: 0 24px 48px rgba(142, 124, 104, 0.15);
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
+      background-color: var(--bg-primary);
+      color: var(--ink);
+      font-family: var(--font-primary);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
     }
-    .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+    .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+    /* Nav */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(250,246,240,0.82);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--warm2);
+    }
+    nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 14px;
+      padding-bottom: 14px;
+    }
+    nav .brand {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    nav .links { display: flex; gap: 24px; }
+    nav .links a {
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: var(--transition-fast);
+    }
+    nav .links a:hover { color: var(--accent); }
+
+    /* Hero */
     header {
       text-align: center;
-      padding: 80px 0 60px;
-      border-bottom: 1px solid var(--border);
+      padding: 72px 0 56px;
     }
-    header h1 { font-size: 3rem; font-weight: 700; margin-bottom: 8px; }
-    header p { color: var(--muted); font-size: 1.15rem; font-style: italic; }
+    header h1 {
+      font-family: var(--font-serif);
+      font-size: 3.2rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    header .tagline {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--accent-cocoa);
+      margin-bottom: 28px;
+    }
     .badge-row {
       display: flex;
-      gap: 12px;
+      gap: 10px;
       justify-content: center;
-      margin-top: 20px;
       flex-wrap: wrap;
+      margin-bottom: 32px;
     }
     .badge {
       display: inline-block;
-      padding: 4px 12px;
+      font-family: var(--font-sans);
+      font-size: 10.5px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 14px;
       border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      border: 1px solid var(--border);
-      color: var(--muted);
+      background: var(--accent-soft);
+      color: var(--accent);
     }
     .stats-row {
       display: flex;
-      gap: 32px;
+      gap: 40px;
       justify-content: center;
-      margin-top: 28px;
       flex-wrap: wrap;
     }
     .stat { text-align: center; }
-    .stat .num { font-size: 2rem; font-weight: 700; color: var(--green); }
-    .stat .label { font-size: 0.85rem; color: var(--muted); }
-    section { padding: 60px 0; border-bottom: 1px solid var(--border); }
-    section:last-child { border-bottom: none; }
-    h2 { font-size: 1.8rem; margin-bottom: 20px; }
-    h3 { font-size: 1.2rem; margin: 24px 0 12px; color: var(--accent); }
-    p, li { color: var(--text); margin-bottom: 10px; }
-    ul, ol { padding-left: 24px; }
-    a { color: var(--accent); text-decoration: none; }
+    .stat .num {
+      font-family: var(--font-sans);
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .stat .label {
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    /* Sections */
+    section {
+      padding: 56px 0;
+      border-top: 1px solid var(--cream3);
+    }
+    h2 {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      font-weight: 500;
+      color: var(--ink);
+      margin-bottom: 16px;
+    }
+    h3 {
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--accent-cocoa);
+      margin: 28px 0 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    p { color: var(--ink2); margin-bottom: 12px; }
+    a { color: var(--accent); text-decoration: none; transition: var(--transition-fast); }
     a:hover { text-decoration: underline; }
+    ul, ol { padding-left: 24px; margin-bottom: 12px; }
+    li { color: var(--ink2); margin-bottom: 6px; }
+
+    /* Code */
     code {
-      background: var(--surface);
+      font-family: var(--font-code);
+      font-size: 14px;
+      background: var(--cream2);
+      border: 1px solid var(--warm2);
+      border-radius: var(--radius-sm);
       padding: 2px 6px;
-      border-radius: 4px;
-      font-family: 'SF Mono', 'Fira Code', monospace;
-      font-size: 0.9em;
+      color: var(--accent);
     }
     pre {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px 20px;
+      background: var(--bg-surface);
+      border: 1px solid var(--cream3);
+      border-radius: var(--radius-md);
+      padding: 18px 22px;
       overflow-x: auto;
       margin: 12px 0 20px;
-      font-size: 0.9rem;
-      line-height: 1.5;
+      box-shadow: var(--shadow-sm);
     }
-    pre code { background: none; padding: 0; }
+    pre code { background: none; border: none; padding: 0; color: var(--ink); }
+
+    /* Tables */
     table {
       width: 100%;
       border-collapse: collapse;
-      margin: 16px 0;
+      margin: 14px 0;
     }
     th, td {
-      padding: 10px 14px;
+      padding: 11px 14px;
       text-align: left;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--cream3);
     }
-    th { color: var(--muted); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    th {
+      font-family: var(--font-sans);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    td { color: var(--ink2); }
+
+    /* Cards */
     .card-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
+      grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+      gap: 20px;
       margin: 20px 0;
     }
     .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 20px;
+      background: var(--bg-surface);
+      border: 1px solid var(--cream3);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+      transition: var(--transition-elastic);
     }
-    .card h4 { font-size: 1rem; margin-bottom: 8px; }
-    .card p { color: var(--muted); font-size: 0.9rem; margin-bottom: 0; }
+    .card:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-3px);
+    }
+    .card h4 {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 0;
+    }
+
+    /* Tags */
     .tag {
       display: inline-block;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      margin-right: 4px;
+      font-family: var(--font-sans);
+      font-size: 10.5px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
     }
-    .tag-delete { background: rgba(248,81,73,0.15); color: var(--red); }
-    .tag-stdlib { background: rgba(63,185,80,0.15); color: var(--green); }
-    .tag-native { background: rgba(88,166,255,0.15); color: var(--accent); }
-    .tag-yagni { background: rgba(210,153,34,0.15); color: #d29922; }
-    .tag-shrink { background: rgba(163,113,247,0.15); color: #a371f7; }
+    .tag-delete { background: #fde8e8; color: #b54545; }
+    .tag-stdlib { background: var(--status-completed-bg); color: var(--status-completed-text); }
+    .tag-native { background: #e8eef8; color: #4a6fa5; }
+    .tag-yagni { background: #fdf0e4; color: #c07f4e; }
+    .tag-shrink { background: #ece4f4; color: #7a5ca8; }
+
+    /* Comparison */
     .comparison {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
       margin: 16px 0;
     }
-    .comparison > div { padding: 16px; border-radius: 8px; }
-    .comparison .before { background: rgba(248,81,73,0.08); border: 1px solid rgba(248,81,73,0.2); }
-    .comparison .after { background: rgba(63,185,80,0.08); border: 1px solid rgba(63,185,80,0.2); }
-    .comparison .before h4 { color: var(--red); margin-bottom: 8px; }
-    .comparison .after h4 { color: var(--green); margin-bottom: 8px; }
+    .comparison > div {
+      padding: 18px;
+      border-radius: var(--radius-md);
+    }
+    .comparison .before {
+      background: #fdf5f5;
+      border: 1px solid #ecd5d5;
+    }
+    .comparison .after {
+      background: var(--status-completed-bg);
+      border: 1px solid #d0e5d6;
+    }
+    .comparison .before h4 {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      color: #b54545;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .comparison .after h4 {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      color: var(--status-completed-text);
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Footer */
     footer {
       text-align: center;
       padding: 40px 0;
-      color: var(--muted);
-      font-size: 0.9rem;
+      border-top: 1px solid var(--cream3);
+      color: var(--text-muted);
+      font-family: var(--font-sans);
+      font-size: 0.85rem;
     }
-    @media (max-width: 640px) {
+
+    /* Responsive */
+    @media (max-width: 768px) {
       header { padding: 40px 0 30px; }
       header h1 { font-size: 2rem; }
-      .stats-row { gap: 20px; }
-      .stat .num { font-size: 1.4rem; }
       .comparison { grid-template-columns: 1fr; }
+      nav .links { gap: 16px; }
+      .stat .num { font-size: 1.6rem; }
+    }
+    @media (max-width: 480px) {
+      header h1 { font-size: 1.7rem; }
+      nav .links { gap: 12px; }
+      nav .links a { font-size: 0.78rem; }
     }
   </style>
 </head>
 <body>
 
+<nav>
+  <div class="container">
+    <a href="#" class="brand">Ponytail</a>
+    <div class="links">
+      <a href="#what">What</a>
+      <a href="#skills">Skills</a>
+      <a href="#examples">Examples</a>
+      <a href="#benchmarks">Benchmarks</a>
+      <a href="#config">Config</a>
+    </div>
+  </div>
+</nav>
+
 <header>
   <div class="container">
     <h1>Ponytail</h1>
-    <p>He says nothing. He writes one line. It works.</p>
+    <p class="tagline">He says nothing. He writes one line. It works.</p>
     <div class="badge-row">
       <span class="badge">MIT License</span>
       <span class="badge">v0.1.0</span>
@@ -166,8 +367,7 @@
   </div>
 </header>
 
-<!-- What is Ponytail -->
-<section>
+<section id="what">
   <div class="container">
     <h2>What is Ponytail?</h2>
     <p>Ponytail is a set of skills and rules for AI coding agents that enforce the laziest solution that actually works. It channels a senior developer who has seen every over-engineered codebase and been paged at 3am for one.</p>
@@ -181,28 +381,22 @@
       <li><strong>Only then:</strong> write the minimum code that works.</li>
     </ol>
     <p>Lazy, not negligent: input validation, error handling, security, and accessibility are never on the chopping block.</p>
-  </div>
-</section>
 
-<!-- Quick Start -->
-<section>
-  <div class="container">
-    <h2>Quick Start</h2>
-    <h3>System-wide install</h3>
+    <h3>Quick Start</h3>
+    <p><strong>System-wide install:</strong></p>
     <pre><code>git clone https://github.com/pavnxet/Mimocode-ponytail.git
 cd Mimocode-ponytail
 ./install.sh    # Linux/Mac
 install.bat     # Windows</code></pre>
-    <h3>Per-project (no install)</h3>
+    <p><strong>Per-project (no install):</strong></p>
     <pre><code>git clone https://github.com/pavnxet/Mimocode-ponytail.git
 cd Mimocode-ponytail
 mimocode</code></pre>
-    <p>mimocode reads <code>AGENTS.md</code> at repo root and loads ponytail skills from <code>skills/</code> automatically.</p>
+    <p>mimocode reads <code>AGENTS.md</code> at repo root and loads skills from <code>skills/</code> automatically.</p>
   </div>
 </section>
 
-<!-- Skills -->
-<section>
+<section id="skills">
   <div class="container">
     <h2>Skills</h2>
     <div class="card-grid">
@@ -227,17 +421,10 @@ mimocode</code></pre>
         <p>Quick reference card for all modes, skills, and commands.</p>
       </div>
     </div>
-  </div>
-</section>
 
-<!-- Intensity Levels -->
-<section>
-  <div class="container">
-    <h2>Intensity Levels</h2>
+    <h3>Intensity Levels</h3>
     <table>
-      <thead>
-        <tr><th>Level</th><th>Trigger</th><th>What changes</th></tr>
-      </thead>
+      <thead><tr><th>Level</th><th>Trigger</th><th>What changes</th></tr></thead>
       <tbody>
         <tr><td><strong>lite</strong></td><td><code>/ponytail lite</code></td><td>Build what's asked, name the lazier alternative in one line. User picks.</td></tr>
         <tr><td><strong>full</strong></td><td><code>/ponytail</code></td><td>The ladder enforced. Stdlib and native first. Shortest diff, shortest explanation. <em>Default.</em></td></tr>
@@ -248,20 +435,49 @@ mimocode</code></pre>
 
     <h3>Example: "Add a cache for these API responses."</h3>
     <table>
-      <thead>
-        <tr><th>Level</th><th>Response</th></tr>
-      </thead>
+      <thead><tr><th>Level</th><th>Response</th></tr></thead>
       <tbody>
         <tr><td>lite</td><td>"Done, cache added. FYI: <code>functools.lru_cache</code> covers this in one line if you'd rather not own a cache class."</td></tr>
         <tr><td>full</td><td>"<code>@lru_cache(maxsize=1000)</code> on the fetch function. Skipped custom cache class, add when lru_cache measurably falls short."</td></tr>
         <tr><td>ultra</td><td>"No cache until a profiler says so. When it does: <code>@lru_cache</code>. A hand-rolled TTL cache class is a bug farm with a hit rate."</td></tr>
       </tbody>
     </table>
+
+    <h3>Review Tags</h3>
+    <table>
+      <thead><tr><th>Tag</th><th>Meaning</th><th>Example</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-delete">delete</span></td>
+          <td>Dead code, unused flexibility, speculative feature</td>
+          <td><code>L52-71: delete: retry wrapper around an idempotent local call.</code></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-stdlib">stdlib</span></td>
+          <td>Hand-rolled thing the standard library ships</td>
+          <td><code>L12-38: stdlib: 27-line validator class. "@" in email, 1 line.</code></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-native">native</span></td>
+          <td>Dependency or code doing what the platform already does</td>
+          <td><code>L4: native: moment.js imported for one format call. Intl.DateTimeFormat, 0 deps.</code></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-yagni">yagni</span></td>
+          <td>Abstraction with one implementation, config nobody sets</td>
+          <td><code>repo.py:L88: yagni: AbstractRepository with one implementation. Inline it.</code></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-shrink">shrink</span></td>
+          <td>Same logic, fewer lines</td>
+          <td><code>L30-44: shrink: manual loop builds dict. dict(zip(keys, values)), 1 line.</code></td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </section>
 
-<!-- Examples -->
-<section>
+<section id="examples">
   <div class="container">
     <h2>Examples</h2>
 
@@ -308,7 +524,7 @@ numbers.sort((a, b) =&gt; a - b)</code></pre>
     <div class="comparison">
       <div class="before">
         <h4>Without Ponytail</h4>
-        <p>120-line <code>TTLCache</code> class with threading, LRU eviction, hit/miss stats — for a problem nobody has measured yet.</p>
+        <p>120-line <code>TTLCache</code> class with threading, LRU eviction, hit/miss stats &mdash; for a problem nobody has measured yet.</p>
       </div>
       <div class="after">
         <h4>With Ponytail</h4>
@@ -324,7 +540,7 @@ def fetch(key): ...</code></pre>
     <div class="comparison">
       <div class="before">
         <h4>Without Ponytail</h4>
-        <p>5 files, 3 classes, custom exception, dependency-injection chain — wrapping one database call.</p>
+        <p>5 files, 3 classes, custom exception, dependency-injection chain &mdash; wrapping one database call.</p>
       </div>
       <div class="after">
         <h4>With Ponytail</h4>
@@ -334,7 +550,7 @@ def fetch(key): ...</code></pre>
     email: str
 
 @app.get("/users/{user_id}", response_model=UserOut)
-def get_user(user_id: int, db: Session = Depends(get_db)):
+def get_user(user_id: int, db = Depends(get_db)):
     user = db.get(User, user_id)
     if not user:
         raise HTTPException(404)
@@ -344,48 +560,7 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
   </div>
 </section>
 
-<!-- Review Tags -->
-<section>
-  <div class="container">
-    <h2>Review Tags</h2>
-    <p>When ponytail-review or ponytail-audit finds something, each finding gets a tag:</p>
-    <table>
-      <thead>
-        <tr><th>Tag</th><th>Meaning</th><th>Example</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><span class="tag tag-delete">delete:</span></td>
-          <td>Dead code, unused flexibility, speculative feature</td>
-          <td><code>L52-71: delete: retry wrapper around an idempotent local call.</code></td>
-        </tr>
-        <tr>
-          <td><span class="tag tag-stdlib">stdlib:</span></td>
-          <td>Hand-rolled thing the standard library ships</td>
-          <td><code>L12-38: stdlib: 27-line validator class. "@" in email, 1 line.</code></td>
-        </tr>
-        <tr>
-          <td><span class="tag tag-native">native:</span></td>
-          <td>Dependency or code doing what the platform already does</td>
-          <td><code>L4: native: moment.js imported for one format call. Intl.DateTimeFormat, 0 deps.</code></td>
-        </tr>
-        <tr>
-          <td><span class="tag tag-yagni">yagni:</span></td>
-          <td>Abstraction with one implementation, config nobody sets</td>
-          <td><code>repo.py:L88: yagni: AbstractRepository with one implementation. Inline it.</code></td>
-        </tr>
-        <tr>
-          <td><span class="tag tag-shrink">shrink:</span></td>
-          <td>Same logic, fewer lines</td>
-          <td><code>L30-44: shrink: manual loop builds dict. dict(zip(keys, values)), 1 line.</code></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</section>
-
-<!-- Benchmarks -->
-<section>
+<section id="benchmarks">
   <div class="container">
     <h2>Benchmarks</h2>
     <p>Three arms (no skill, caveman, ponytail), three models, five tasks, 10 runs per cell, median reported.</p>
@@ -423,7 +598,6 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
   </div>
 </section>
 
-<!-- Agent Portability -->
 <section>
   <div class="container">
     <h2>Agent Portability</h2>
@@ -438,8 +612,7 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
   </div>
 </section>
 
-<!-- Configuration -->
-<section>
+<section id="config">
   <div class="container">
     <h2>Configuration</h2>
     <p>Default mode is <code>full</code>. Override it:</p>
@@ -448,11 +621,10 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
     <h3>Config file</h3>
     <p><code>~/.config/ponytail/config.json</code> (Windows: <code>%APPDATA%\ponytail\config.json</code>)</p>
     <pre><code>{ "defaultMode": "lite" }</code></pre>
-    <p>Resolution: env var > config file > <code>full</code>.</p>
+    <p>Resolution: env var &gt; config file &gt; <code>full</code>.</p>
   </div>
 </section>
 
-<!-- Rules -->
 <section>
   <div class="container">
     <h2>The Rules</h2>
@@ -475,7 +647,6 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
   </div>
 </section>
 
-<!-- Repo Structure -->
 <section>
   <div class="container">
     <h2>Repository Structure</h2>
@@ -498,20 +669,15 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
   </div>
 </section>
 
-<!-- FAQ -->
 <section>
   <div class="container">
     <h2>FAQ</h2>
-
     <h3>Does it need a config file?</h3>
     <p>No. Optional <code>~/.config/ponytail/config.json</code> or <code>PONYTAIL_DEFAULT_MODE</code> env var can set the default level, but nothing is required.</p>
-
     <h3>What if I really need the 120-line cache class?</h3>
     <p>You don't. Insist anyway and he'll build it. Slowly. Correctly. While looking at you.</p>
-
     <h3>Does it scale?</h3>
     <p>The code you never wrote scales infinitely. Zero bugs, zero CVEs, 100% uptime since forever.</p>
-
     <h3>Why "ponytail"?</h3>
     <p>You know exactly why.</p>
   </div>
