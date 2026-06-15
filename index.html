@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ponytail — Lazy Senior Dev Mode for AI Agents</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --green: #3fb950;
+      --red: #f85149;
+      --code-bg: #0d1117;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .container { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+    header {
+      text-align: center;
+      padding: 80px 0 60px;
+      border-bottom: 1px solid var(--border);
+    }
+    header h1 { font-size: 3rem; font-weight: 700; margin-bottom: 8px; }
+    header p { color: var(--muted); font-size: 1.15rem; font-style: italic; }
+    .badge-row {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .stats-row {
+      display: flex;
+      gap: 32px;
+      justify-content: center;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+    .stat { text-align: center; }
+    .stat .num { font-size: 2rem; font-weight: 700; color: var(--green); }
+    .stat .label { font-size: 0.85rem; color: var(--muted); }
+    section { padding: 60px 0; border-bottom: 1px solid var(--border); }
+    section:last-child { border-bottom: none; }
+    h2 { font-size: 1.8rem; margin-bottom: 20px; }
+    h3 { font-size: 1.2rem; margin: 24px 0 12px; color: var(--accent); }
+    p, li { color: var(--text); margin-bottom: 10px; }
+    ul, ol { padding-left: 24px; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code {
+      background: var(--surface);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.9em;
+    }
+    pre {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      overflow-x: auto;
+      margin: 12px 0 20px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    pre code { background: none; padding: 0; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+    }
+    th, td {
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    th { color: var(--muted); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px;
+    }
+    .card h4 { font-size: 1rem; margin-bottom: 8px; }
+    .card p { color: var(--muted); font-size: 0.9rem; margin-bottom: 0; }
+    .tag {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-right: 4px;
+    }
+    .tag-delete { background: rgba(248,81,73,0.15); color: var(--red); }
+    .tag-stdlib { background: rgba(63,185,80,0.15); color: var(--green); }
+    .tag-native { background: rgba(88,166,255,0.15); color: var(--accent); }
+    .tag-yagni { background: rgba(210,153,34,0.15); color: #d29922; }
+    .tag-shrink { background: rgba(163,113,247,0.15); color: #a371f7; }
+    .comparison {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .comparison > div { padding: 16px; border-radius: 8px; }
+    .comparison .before { background: rgba(248,81,73,0.08); border: 1px solid rgba(248,81,73,0.2); }
+    .comparison .after { background: rgba(63,185,80,0.08); border: 1px solid rgba(63,185,80,0.2); }
+    .comparison .before h4 { color: var(--red); margin-bottom: 8px; }
+    .comparison .after h4 { color: var(--green); margin-bottom: 8px; }
+    footer {
+      text-align: center;
+      padding: 40px 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    @media (max-width: 640px) {
+      header { padding: 40px 0 30px; }
+      header h1 { font-size: 2rem; }
+      .stats-row { gap: 20px; }
+      .stat .num { font-size: 1.4rem; }
+      .comparison { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>Ponytail</h1>
+    <p>He says nothing. He writes one line. It works.</p>
+    <div class="badge-row">
+      <span class="badge">MIT License</span>
+      <span class="badge">v0.1.0</span>
+      <span class="badge">mimocode / claude code / opencode</span>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="num">80-94%</div><div class="label">less code</div></div>
+      <div class="stat"><div class="num">3-6x</div><div class="label">faster</div></div>
+      <div class="stat"><div class="num">47-77%</div><div class="label">cheaper</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- What is Ponytail -->
+<section>
+  <div class="container">
+    <h2>What is Ponytail?</h2>
+    <p>Ponytail is a set of skills and rules for AI coding agents that enforce the laziest solution that actually works. It channels a senior developer who has seen every over-engineered codebase and been paged at 3am for one.</p>
+    <p>Before writing any code, the agent walks a decision ladder:</p>
+    <ol>
+      <li><strong>Does this need to exist?</strong> Speculative need = skip it. (YAGNI)</li>
+      <li><strong>Stdlib does it?</strong> Use it.</li>
+      <li><strong>Native platform feature?</strong> Use it.</li>
+      <li><strong>Already-installed dependency?</strong> Use it.</li>
+      <li><strong>Can it be one line?</strong> One line.</li>
+      <li><strong>Only then:</strong> write the minimum code that works.</li>
+    </ol>
+    <p>Lazy, not negligent: input validation, error handling, security, and accessibility are never on the chopping block.</p>
+  </div>
+</section>
+
+<!-- Quick Start -->
+<section>
+  <div class="container">
+    <h2>Quick Start</h2>
+    <h3>System-wide install</h3>
+    <pre><code>git clone https://github.com/pavnxet/Mimocode-ponytail.git
+cd Mimocode-ponytail
+./install.sh    # Linux/Mac
+install.bat     # Windows</code></pre>
+    <h3>Per-project (no install)</h3>
+    <pre><code>git clone https://github.com/pavnxet/Mimocode-ponytail.git
+cd Mimocode-ponytail
+mimocode</code></pre>
+    <p>mimocode reads <code>AGENTS.md</code> at repo root and loads ponytail skills from <code>skills/</code> automatically.</p>
+  </div>
+</section>
+
+<!-- Skills -->
+<section>
+  <div class="container">
+    <h2>Skills</h2>
+    <div class="card-grid">
+      <div class="card">
+        <h4>ponytail</h4>
+        <p>Lazy senior dev mode. The simplest solution that works. Supports lite / full / ultra intensity levels.</p>
+      </div>
+      <div class="card">
+        <h4>ponytail-review</h4>
+        <p>Review diffs for over-engineering. One line per finding: location, what to cut, what replaces it.</p>
+      </div>
+      <div class="card">
+        <h4>ponytail-audit</h4>
+        <p>Whole-repo audit for bloat. Ranked list of what to delete, simplify, or replace with stdlib/native.</p>
+      </div>
+      <div class="card">
+        <h4>ponytail-debt</h4>
+        <p>Harvest <code>ponytail:</code> comments into a debt ledger. Track deferred shortcuts before they rot.</p>
+      </div>
+      <div class="card">
+        <h4>ponytail-help</h4>
+        <p>Quick reference card for all modes, skills, and commands.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Intensity Levels -->
+<section>
+  <div class="container">
+    <h2>Intensity Levels</h2>
+    <table>
+      <thead>
+        <tr><th>Level</th><th>Trigger</th><th>What changes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>lite</strong></td><td><code>/ponytail lite</code></td><td>Build what's asked, name the lazier alternative in one line. User picks.</td></tr>
+        <tr><td><strong>full</strong></td><td><code>/ponytail</code></td><td>The ladder enforced. Stdlib and native first. Shortest diff, shortest explanation. <em>Default.</em></td></tr>
+        <tr><td><strong>ultra</strong></td><td><code>/ponytail ultra</code></td><td>YAGNI extremist. Deletion before addition. Challenges requirements before building.</td></tr>
+      </tbody>
+    </table>
+    <p>Level persists until changed or session end. Say "stop ponytail" or "normal mode" to deactivate.</p>
+
+    <h3>Example: "Add a cache for these API responses."</h3>
+    <table>
+      <thead>
+        <tr><th>Level</th><th>Response</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>lite</td><td>"Done, cache added. FYI: <code>functools.lru_cache</code> covers this in one line if you'd rather not own a cache class."</td></tr>
+        <tr><td>full</td><td>"<code>@lru_cache(maxsize=1000)</code> on the fetch function. Skipped custom cache class, add when lru_cache measurably falls short."</td></tr>
+        <tr><td>ultra</td><td>"No cache until a profiler says so. When it does: <code>@lru_cache</code>. A hand-rolled TTL cache class is a bug farm with a hit rate."</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Examples -->
+<section>
+  <div class="container">
+    <h2>Examples</h2>
+
+    <h3>Date Picker</h3>
+    <div class="comparison">
+      <div class="before">
+        <h4>Without Ponytail</h4>
+        <p><code>npm install flatpickr</code> + 30-line wrapper component, two <code>useEffect</code> hooks, cleanup function, CSS import.</p>
+      </div>
+      <div class="after">
+        <h4>With Ponytail</h4>
+        <pre><code>&lt;!-- ponytail: browser has one --&gt;
+&lt;input type="date"&gt;</code></pre>
+      </div>
+    </div>
+
+    <h3>Email Validation</h3>
+    <div class="comparison">
+      <div class="before">
+        <h4>Without Ponytail</h4>
+        <p>27-line <code>EmailValidator</code> class with regex that still rejects valid addresses and accepts invalid ones.</p>
+      </div>
+      <div class="after">
+        <h4>With Ponytail</h4>
+        <pre><code># ponytail: good enough, real validation is sending the mail
+"@" in email and "." in email.split("@")[-1]</code></pre>
+      </div>
+    </div>
+
+    <h3>Sorting</h3>
+    <div class="comparison">
+      <div class="before">
+        <h4>Without Ponytail</h4>
+        <p>24-line hand-rolled quicksort that allocates three arrays per recursion level and blows the stack on large inputs.</p>
+      </div>
+      <div class="after">
+        <h4>With Ponytail</h4>
+        <pre><code>// ponytail: this exists
+numbers.sort((a, b) =&gt; a - b)</code></pre>
+      </div>
+    </div>
+
+    <h3>Caching</h3>
+    <div class="comparison">
+      <div class="before">
+        <h4>Without Ponytail</h4>
+        <p>120-line <code>TTLCache</code> class with threading, LRU eviction, hit/miss stats — for a problem nobody has measured yet.</p>
+      </div>
+      <div class="after">
+        <h4>With Ponytail</h4>
+        <pre><code># ponytail: stdlib covers this
+from functools import lru_cache
+
+@lru_cache(maxsize=1000)
+def fetch(key): ...</code></pre>
+      </div>
+    </div>
+
+    <h3>API Endpoint</h3>
+    <div class="comparison">
+      <div class="before">
+        <h4>Without Ponytail</h4>
+        <p>5 files, 3 classes, custom exception, dependency-injection chain — wrapping one database call.</p>
+      </div>
+      <div class="after">
+        <h4>With Ponytail</h4>
+        <pre><code>class UserOut(BaseModel):
+    id: int
+    name: str
+    email: str
+
+@app.get("/users/{user_id}", response_model=UserOut)
+def get_user(user_id: int, db: Session = Depends(get_db)):
+    user = db.get(User, user_id)
+    if not user:
+        raise HTTPException(404)
+    return user</code></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Review Tags -->
+<section>
+  <div class="container">
+    <h2>Review Tags</h2>
+    <p>When ponytail-review or ponytail-audit finds something, each finding gets a tag:</p>
+    <table>
+      <thead>
+        <tr><th>Tag</th><th>Meaning</th><th>Example</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-delete">delete:</span></td>
+          <td>Dead code, unused flexibility, speculative feature</td>
+          <td><code>L52-71: delete: retry wrapper around an idempotent local call.</code></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-stdlib">stdlib:</span></td>
+          <td>Hand-rolled thing the standard library ships</td>
+          <td><code>L12-38: stdlib: 27-line validator class. "@" in email, 1 line.</code></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-native">native:</span></td>
+          <td>Dependency or code doing what the platform already does</td>
+          <td><code>L4: native: moment.js imported for one format call. Intl.DateTimeFormat, 0 deps.</code></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-yagni">yagni:</span></td>
+          <td>Abstraction with one implementation, config nobody sets</td>
+          <td><code>repo.py:L88: yagni: AbstractRepository with one implementation. Inline it.</code></td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-shrink">shrink:</span></td>
+          <td>Same logic, fewer lines</td>
+          <td><code>L30-44: shrink: manual loop builds dict. dict(zip(keys, values)), 1 line.</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Benchmarks -->
+<section>
+  <div class="container">
+    <h2>Benchmarks</h2>
+    <p>Three arms (no skill, caveman, ponytail), three models, five tasks, 10 runs per cell, median reported.</p>
+
+    <h3>Code (lines)</h3>
+    <table>
+      <thead><tr><th>Arm</th><th>Haiku</th><th>Sonnet</th><th>Opus</th></tr></thead>
+      <tbody>
+        <tr><td>baseline (no skill)</td><td>518</td><td>693</td><td>256</td></tr>
+        <tr><td>caveman</td><td>116</td><td>120</td><td>67</td></tr>
+        <tr><td><strong>ponytail</strong></td><td><strong>39</strong></td><td><strong>44</strong></td><td><strong>51</strong></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Cost (USD, 5 tasks)</h3>
+    <table>
+      <thead><tr><th>Arm</th><th>Haiku</th><th>Sonnet</th><th>Opus</th></tr></thead>
+      <tbody>
+        <tr><td>baseline (no skill)</td><td>$0.032</td><td>$0.141</td><td>$0.135</td></tr>
+        <tr><td>caveman</td><td>$0.014</td><td>$0.045</td><td>$0.075</td></tr>
+        <tr><td><strong>ponytail</strong></td><td><strong>$0.010</strong></td><td><strong>$0.032</strong></td><td><strong>$0.071</strong></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Latency (seconds, 5 tasks)</h3>
+    <table>
+      <thead><tr><th>Arm</th><th>Haiku</th><th>Sonnet</th><th>Opus</th></tr></thead>
+      <tbody>
+        <tr><td>baseline (no skill)</td><td>37.7</td><td>124.1</td><td>58.7</td></tr>
+        <tr><td>caveman</td><td>14.9</td><td>34.7</td><td>23.1</td></tr>
+        <tr><td><strong>ponytail</strong></td><td><strong>9.9</strong></td><td><strong>20.1</strong></td><td><strong>18.0</strong></td></tr>
+      </tbody>
+    </table>
+    <p>Versus baseline: <strong>80-94% less code</strong>, <strong>47-77% cheaper</strong>, <strong>3-6x faster</strong>.</p>
+  </div>
+</section>
+
+<!-- Agent Portability -->
+<section>
+  <div class="container">
+    <h2>Agent Portability</h2>
+    <p>Ponytail works across multiple AI agent hosts. The core skills live in <code>skills/</code>; host-specific files are thin adapters.</p>
+    <table>
+      <thead><tr><th>Host</th><th>Files</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>mimocode</td><td><code>AGENTS.md</code>, <code>skills/</code>, <code>commands/</code></td><td>Always-on rules from AGENTS.md, skills loaded on demand.</td></tr>
+        <tr><td>Generic agents</td><td><code>AGENTS.md</code> or <code>skills/*/SKILL.md</code></td><td>Copy the rule file or load skill files directly.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Configuration -->
+<section>
+  <div class="container">
+    <h2>Configuration</h2>
+    <p>Default mode is <code>full</code>. Override it:</p>
+    <h3>Environment variable</h3>
+    <pre><code>export PONYTAIL_DEFAULT_MODE=ultra  # lite | full | ultra | off</code></pre>
+    <h3>Config file</h3>
+    <p><code>~/.config/ponytail/config.json</code> (Windows: <code>%APPDATA%\ponytail\config.json</code>)</p>
+    <pre><code>{ "defaultMode": "lite" }</code></pre>
+    <p>Resolution: env var > config file > <code>full</code>.</p>
+  </div>
+</section>
+
+<!-- Rules -->
+<section>
+  <div class="container">
+    <h2>The Rules</h2>
+    <ul>
+      <li>No unrequested abstractions: no interface with one implementation, no factory for one product, no config for a value that never changes.</li>
+      <li>No boilerplate, no scaffolding "for later", later can scaffold for itself.</li>
+      <li>Deletion over addition. Boring over clever, clever is what someone decodes at 3am.</li>
+      <li>Fewest files possible. Shortest working diff wins.</li>
+      <li>Complex request? Ship the lazy version and question it in the same response.</li>
+      <li>Mark deliberate simplifications with a <code>ponytail:</code> comment naming the ceiling and upgrade path.</li>
+    </ul>
+    <h3>What is never simplified away</h3>
+    <ul>
+      <li>Input validation at trust boundaries</li>
+      <li>Error handling that prevents data loss</li>
+      <li>Security measures</li>
+      <li>Accessibility basics</li>
+      <li>Anything explicitly requested</li>
+    </ul>
+  </div>
+</section>
+
+<!-- Repo Structure -->
+<section>
+  <div class="container">
+    <h2>Repository Structure</h2>
+    <pre><code>.
+├── AGENTS.md              # Always-on rules for agents
+├── skills/
+│   ├── ponytail/          # Lazy senior dev mode
+│   ├── ponytail-review/   # Over-engineering review
+│   ├── ponytail-audit/    # Whole-repo audit
+│   ├── ponytail-debt/     # Shortcut ledger
+│   └── ponytail-help/     # Quick reference
+├── commands/              # Slash-command definitions (TOML)
+├── examples/              # Before/after comparisons
+├── benchmarks/            # Promptfoo-based evals
+├── tests/                 # Behavior, correctness, command tests
+├── docs/                  # Agent portability docs
+├── install.sh             # Unix installer
+├── install.bat            # Windows installer
+└── package.json</code></pre>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section>
+  <div class="container">
+    <h2>FAQ</h2>
+
+    <h3>Does it need a config file?</h3>
+    <p>No. Optional <code>~/.config/ponytail/config.json</code> or <code>PONYTAIL_DEFAULT_MODE</code> env var can set the default level, but nothing is required.</p>
+
+    <h3>What if I really need the 120-line cache class?</h3>
+    <p>You don't. Insist anyway and he'll build it. Slowly. Correctly. While looking at you.</p>
+
+    <h3>Does it scale?</h3>
+    <p>The code you never wrote scales infinitely. Zero bugs, zero CVEs, 100% uptime since forever.</p>
+
+    <h3>Why "ponytail"?</h3>
+    <p>You know exactly why.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>Ponytail v0.1.0 &middot; <a href="https://github.com/pavnxet/Mimocode-ponytail">GitHub</a> &middot; MIT License</p>
+  </div>
+</footer>
+
+</body>
+</html>
