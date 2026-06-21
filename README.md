@@ -11,7 +11,10 @@
   <em>He says nothing. He writes one line. It works.</em>
 </p>
 
-
+<p align="center">
+  <img src="https://img.shields.io/github/stars/pavnxet/Mimocode-ponytail?style=flat-square&color=111111&label=stars" alt="Stars">
+  <img src="https://img.shields.io/badge/license-MIT-111111?style=flat-square" alt="MIT license">
+</p>
 
 <p align="center">
   <strong>80-94% less code &middot; 3-6&times; faster &middot; 47-77% cheaper</strong><br>
@@ -52,15 +55,15 @@ Before writing code, the agent stops at the first rung that holds:
 
 Lazy, not negligent: trust-boundary validation, data-loss handling, security, and accessibility are never on the chopping block.
 
-## Install for mimocode
+## Install
 
 ### System-wide (one-time)
 
 Clone and run the install script:
 
 ```bash
-git clone https://github.com/DietrichGebert/ponytail.git
-cd ponytail
+git clone https://github.com/pavnxet/Mimocode-ponytail.git
+cd Mimocode-ponytail
 ./install.sh    # Linux/Mac
 install.bat     # Windows
 ```
@@ -72,8 +75,8 @@ This copies the skills to `~/.codex/skills/`. Works in any project after restart
 Clone this repo and run mimocode from within it:
 
 ```bash
-git clone https://github.com/DietrichGebert/ponytail.git
-cd ponytail
+git clone https://github.com/pavnxet/Mimocode-ponytail.git
+cd Mimocode-ponytail
 mimocode
 ```
 
@@ -87,6 +90,7 @@ mimocode automatically reads `AGENTS.md` and loads the ponytail skills from the 
    - `ponytail-review` - Review diffs for over-engineering
    - `ponytail-audit` - Audit entire repo for bloat
    - `ponytail-debt` - Track deferred shortcuts
+   - `ponytail-gain` - Show the measured impact scoreboard
    - `ponytail-help` - Quick reference
 
 ### Configuration
@@ -111,6 +115,7 @@ Or create `~/.config/ponytail/config.json` (`%APPDATA%\ponytail\config.json` on 
 | `/ponytail-review` | Review the current diff for over-engineering, hands back a delete-list. |
 | `/ponytail-audit` | Audit the whole repo for over-engineering, not just the diff. |
 | `/ponytail-debt` | Harvest the `ponytail:` shortcuts you've deferred into a ledger, so "later" doesn't become "never". |
+| `/ponytail-gain` | Show the measured impact scoreboard (less code, less cost, more speed) from the benchmark. |
 | `/ponytail-help` | Quick reference for the commands above. |
 
 ## Intensity levels
@@ -160,3 +165,7 @@ You know exactly why.
 ## License
 
 [MIT](LICENSE). The shortest license that works.
+
+## Credits
+
+Based on [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail).
