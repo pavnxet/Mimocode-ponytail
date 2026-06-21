@@ -1,4 +1,0 @@
-interface:
-  display_name: "Ponytail Help"
-  short_description: "Quick reference for all ponytail modes and commands"
-  default_prompt: "Use ponytail-help to show the reference card."

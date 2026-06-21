@@ -1,4 +1,0 @@
-interface:
-  display_name: "Ponytail Audit"
-  short_description: "Whole-repo audit for over-engineering"
-  default_prompt: "Use ponytail-audit to find bloat in this codebase."

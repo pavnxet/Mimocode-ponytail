@@ -1,4 +1,0 @@
-interface:
-  display_name: "Ponytail Debt"
-  short_description: "Harvest ponytail: comments into a debt ledger"
-  default_prompt: "Use ponytail-debt to list all deferred shortcuts."
