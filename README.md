@@ -65,7 +65,7 @@ cd ponytail
 install.bat     # Windows
 ```
 
-This copies the skills to mimocode's system skills directory. Works in any project after restart.
+This copies the skills to `~/.codex/skills/`. Works in any project after restart.
 
 ### Per-project (no install)
 

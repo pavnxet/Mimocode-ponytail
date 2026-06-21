@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ponytail Review"
+  short_description: "Over-engineering code review - find what to delete"
+  default_prompt: "Use ponytail-review to find over-engineering in this code."
