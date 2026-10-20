@@ -105,6 +105,7 @@ export function AdvancedCountdownTimer({
   };
 
   const progressPercent = ((initialSeconds - timeLeft) / initialSeconds) * 100;
+  const fillStyle = { width: progressPercent + '%' };
 
   return (
     <div className="advanced-timer">
@@ -114,7 +115,7 @@ export function AdvancedCountdownTimer({
       <div className="progress-bar">
         <div 
           className="progress-fill" 
-          style={{ width: `${progressPercent}%` }}
+          style={fillStyle}
         />
       </div>
       <div className="timer-controls">
