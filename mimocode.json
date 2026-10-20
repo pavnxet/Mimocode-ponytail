@@ -1,0 +1,13 @@
+{
+  "$schema": "https://mimo.xiaomi.com/mimocode/config.json",
+  "instructions": [
+    "AGENTS.md"
+  ],
+  "permission": {
+    "skill": {
+      "*": "allow",
+      "ponytail": "allow",
+      "ponytail-*": "allow"
+    }
+  }
+}

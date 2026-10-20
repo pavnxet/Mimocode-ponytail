@@ -352,17 +352,17 @@
 
 <header>
   <div class="container">
-    <h1>Ponytail</h1>
+    <h1>Ponytail for MiMo Code</h1>
     <p class="tagline">He says nothing. He writes one line. It works.</p>
     <div class="badge-row">
       <span class="badge">MIT License</span>
-      <span class="badge">v0.1.0</span>
-      <span class="badge">mimocode / claude code / opencode</span>
+      <span class="badge">v5.3.2</span>
+      <span class="badge">MiMo Code</span>
     </div>
     <div class="stats-row">
-      <div class="stat"><div class="num">80-94%</div><div class="label">less code</div></div>
-      <div class="stat"><div class="num">3-6x</div><div class="label">faster</div></div>
-      <div class="stat"><div class="num">47-77%</div><div class="label">cheaper</div></div>
+      <div class="stat"><div class="num">53%</div><div class="label">less code</div></div>
+      <div class="stat"><div class="num">41%</div><div class="label">faster</div></div>
+      <div class="stat"><div class="num">26%</div><div class="label">cheaper</div></div>
     </div>
   </div>
 </header>
@@ -374,8 +374,8 @@
     <p>Before writing any code, the agent walks a decision ladder:</p>
     <ol>
       <li><strong>Does this need to exist?</strong> Speculative need = skip it. (YAGNI)</li>
-      <li><strong>Stdlib does it?</strong> Use it.</li>
-      <li><strong>Native platform feature?</strong> Use it.</li>
+      <li><strong>Already in this codebase?</strong> Use the helper, component or pattern that's there.</li>
+      <li><strong>Stdlib or native platform feature?</strong> Use it.</li>
       <li><strong>Already-installed dependency?</strong> Use it.</li>
       <li><strong>Can it be one line?</strong> One line.</li>
       <li><strong>Only then:</strong> write the minimum code that works.</li>
@@ -386,13 +386,13 @@
     <p><strong>System-wide install:</strong></p>
     <pre><code>git clone https://github.com/pavnxet/Mimocode-ponytail.git
 cd Mimocode-ponytail
-./install.sh    # Linux/Mac
+./install.sh    # Linux/macOS
 install.bat     # Windows</code></pre>
     <p><strong>Per-project (no install):</strong></p>
     <pre><code>git clone https://github.com/pavnxet/Mimocode-ponytail.git
 cd Mimocode-ponytail
-mimocode</code></pre>
-    <p>mimocode reads <code>AGENTS.md</code> at repo root and loads skills from <code>skills/</code> automatically.</p>
+mimo</code></pre>
+    <p>MiMo Code reads <code>AGENTS.md</code>, discovers skills in <code>.mimocode/skills/</code>, and registers the commands in <code>.mimocode/commands/</code>.</p>
   </div>
 </section>
 
@@ -605,7 +605,7 @@ def get_user(user_id: int, db = Depends(get_db)):
     <table>
       <thead><tr><th>Host</th><th>Files</th><th>Notes</th></tr></thead>
       <tbody>
-        <tr><td>mimocode</td><td><code>AGENTS.md</code>, <code>skills/</code>, <code>commands/</code></td><td>Always-on rules from AGENTS.md, skills loaded on demand.</td></tr>
+        <tr><td>MiMo Code</td><td><code>AGENTS.md</code>, <code>.mimocode/skills/</code>, <code>.mimocode/commands/</code>, <code>mimocode.json</code></td><td>Always-on rules, skills on demand, commands in the TUI, plugin for levels.</td></tr>
         <tr><td>Generic agents</td><td><code>AGENTS.md</code> or <code>skills/*/SKILL.md</code></td><td>Copy the rule file or load skill files directly.</td></tr>
       </tbody>
     </table>
@@ -652,17 +652,23 @@ def get_user(user_id: int, db = Depends(get_db)):
     <h2>Repository Structure</h2>
     <pre><code>.
 ├── AGENTS.md              # Always-on rules for agents
+├── mimocode.json          # MiMo Code config (instructions, skill permissions)
+├── .mimocode/
+│   ├── skills/            # Generated mirror of skills/ for MiMo Code discovery
+│   ├── commands/          # Slash-command definitions (Markdown)
+│   └── plugin/            # Ruleset injection + level persistence
 ├── skills/
 │   ├── ponytail/          # Lazy senior dev mode
-│   ├── ponytail-review/   # Over-engineering review
-│   ├── ponytail-audit/    # Whole-repo audit
+│   ├── ponytail-review/   # Quality review of a change
+│   ├── ponytail-audit/    # Whole-repo quality audit
 │   ├── ponytail-debt/     # Shortcut ledger
+│   ├── ponytail-gain/     # Impact scoreboard
 │   └── ponytail-help/     # Quick reference
-├── commands/              # Slash-command definitions (TOML)
+├── commands/              # Codex-style TOML commands (portability)
 ├── examples/              # Before/after comparisons
 ├── benchmarks/            # Promptfoo-based evals
-├── tests/                 # Behavior, correctness, command tests
-├── docs/                  # Agent portability docs
+├── tests/                 # Behavior, correctness, MiMo wiring tests
+├── docs/                  # Portability and MiMo Code docs
 ├── install.sh             # Unix installer
 ├── install.bat            # Windows installer
 └── package.json</code></pre>
@@ -685,7 +691,7 @@ def get_user(user_id: int, db = Depends(get_db)):
 
 <footer>
   <div class="container">
-    <p>Ponytail v0.1.0 &middot; <a href="https://github.com/pavnxet/Mimocode-ponytail">GitHub</a> &middot; MIT License</p>
+    <p>Ponytail for MiMo Code v5.3.2 &middot; <a href="https://github.com/pavnxet/Mimocode-ponytail">GitHub</a> &middot; MIT License</p>
   </div>
 </footer>
 

@@ -42,6 +42,13 @@ test('email: no code block fails', () => {
   assert.equal(result.pass, false);
 });
 
+test('email: bare unfenced code is still scored (#65)', () => {
+  const result = correctness('import re\ndef validate_email(e):\n    return bool(re.match(r"^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$", e))', {
+    vars: { task: 'Write me a Python function that validates email addresses.' },
+  });
+  assert.equal(result.pass, true);
+});
+
 // --- Debounce ---
 
 test('debounce: correct implementation passes', () => {
@@ -72,6 +79,13 @@ test('debounce: immediate-call implementation fails', () => {
   assert.equal(result.score, 0);
 });
 
+test('debounce: bare unfenced arrow function is still scored (#65)', () => {
+  const result = correctness('const debounce = (fn, delay) => {\n  let t;\n  return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), delay); };\n};', {
+    vars: { task: 'Write a reusable debounce function in vanilla JavaScript: debounce(fn, delay).' },
+  });
+  assert.equal(result.pass, true);
+});
+
 // --- CSV sum ---
 
 test('csv: correct pandas one-liner passes', () => {
@@ -84,6 +98,16 @@ print(df['amount'].sum())`,
   );
   assert.equal(result.pass, true);
   assert.equal(result.score, 1);
+});
+
+test('csv: an exception in the code is reported, not swallowed (#919)', () => {
+  const result = check(
+    "Write Python code that reads sales.csv and sums the 'amount' column.",
+    'python',
+    `raise RuntimeError("boom")`,
+  );
+  assert.equal(result.pass, false);
+  assert.match(result.reason, /boom/);
 });
 
 test('csv: code that prints wrong value fails', () => {
@@ -104,6 +128,36 @@ test('csv: value containing 351 as substring fails (e.g. 13510)', () => {
   );
   assert.equal(result.pass, false);
   assert.equal(result.score, 0);
+});
+
+test('csv: timeout can be raised for slow pandas startup', () => {
+  const previous = process.env.PONYTAIL_CORRECTNESS_TIMEOUT_MS;
+  try {
+    process.env.PONYTAIL_CORRECTNESS_TIMEOUT_MS = '1';
+    const timedOut = check(
+      "Write Python code that reads sales.csv and sums the 'amount' column.",
+      'python',
+      `import time
+time.sleep(0.05)
+print(351)`,
+    );
+    assert.equal(timedOut.pass, false);
+    assert.match(timedOut.reason, /ETIMEDOUT|timed out/i);
+
+    process.env.PONYTAIL_CORRECTNESS_TIMEOUT_MS = '1000';
+    const completed = check(
+      "Write Python code that reads sales.csv and sums the 'amount' column.",
+      'python',
+      `import time
+time.sleep(0.05)
+print(351)`,
+    );
+    assert.equal(completed.pass, true);
+    assert.equal(completed.score, 1);
+  } finally {
+    if (previous === undefined) delete process.env.PONYTAIL_CORRECTNESS_TIMEOUT_MS;
+    else process.env.PONYTAIL_CORRECTNESS_TIMEOUT_MS = previous;
+  }
 });
 
 // --- React countdown ---

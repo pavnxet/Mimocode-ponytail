@@ -1,10 +1,19 @@
 {
-  "name": "ponytail",
-  "version": "0.1.0",
-  "description": "Lazy senior dev mode for AI agents. The best code is the code you never wrote.",
-  "keywords": ["yagni", "minimalism", "code-review", "productivity", "mimocode"],
+  "name": "mimocode-ponytail",
+  "version": "5.3.2",
+  "description": "Lazy senior dev mode for MiMo Code. The best code is the code you never wrote.",
+  "keywords": [
+    "yagni",
+    "minimalism",
+    "code-review",
+    "mimocode",
+    "skills",
+    "agent"
+  ],
   "license": "MIT",
   "scripts": {
+    "build": "node scripts/build-mimocode-skills.js",
+    "check": "node scripts/check-rule-copies.js",
     "test": "node --test tests/*.test.js"
   }
 }

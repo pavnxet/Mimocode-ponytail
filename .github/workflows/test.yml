@@ -22,7 +22,7 @@ jobs:
       - name: Install Python deps for correctness checks
         run: pip install pandas
 
-      - name: Check rule copies
+      - name: Check skill frontmatter and mirror
         run: node scripts/check-rule-copies.js
 
       - name: Run tests
